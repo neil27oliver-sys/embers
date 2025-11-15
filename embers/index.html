@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ember of Release: A Fire Ritual</title>
+
+    <!-- System fallback: Matches your CSS vars without net -->
+    <style>
+        /* Override for local equiv */
+        :root {
+            --font-header: 'Georgia', serif;  /* Fell English proxy—elegant serif */
+            --font-body: 'Georgia', serif;
+        }
+    </style>
+    <!-- Tone.js CDN for Ambient Soundscape -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+
+    <style>
+        /* ------------------- COLOR PALETTE ------------------- */
+        :root {
+            --color-background: #0F0F0F;
+            --color-text-light: #F4E8C1;
+            --color-accent-gold: #D4A574;
+            --color-accent-fire: #FFD700;
+            --color-vessel-dark: #2d1b0f;
+            --font-header: 'IM Fell English', serif;
+            --font-body: 'Georgia', serif;
+        }
+
+        /* ------------------- BASE STYLES ------------------- */
+        body {
+            font-family: var(--font-body);
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--color-background);
+            color: var(--color-text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1, h2, h3 {
+            font-family: var(--font-header);
+            color: var(--color-accent-gold);
+            text-align: center;
+        }
+        h1, h2 {
+            border-bottom: 2px solid var(--color-vessel-dark);
+            padding-bottom: 10px;
+        }
+        .ritual-step {
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .hidden-step {
+            display: none;
+        }
+
+        /* Navigation Button Style */
+        .nav-button {
+            display: block;
+            width: 80%;
+            max-width: 300px;
+            margin: 20px auto;
+            background: var(--color-accent-gold);
+            color: var(--color-background);
+            border: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+            transition: transform 0.2s, background 0.2s;
+        }
+        .nav-button:hover:not(:disabled) {
+            background: var(--color-accent-fire);
+            transform: scale(1.02);
+        }
+        .nav-button:disabled {
+            background: var(--color-vessel-dark);
+            color: #555;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Latin Invocation Text */
+        .latin {
+            font-family: var(--font-header);
+            font-weight: bold;
+            color: var(--color-accent-fire);
+            text-align: center;
+            background: rgba(212, 165, 116, 0.05);
+            padding: 25px 15px;
+            border-left: 4px solid var(--color-accent-gold);
+            margin: 20px auto;
+            font-size: 1.1em;
+            line-height: 1.8;
+            max-width: 90%;
+            white-space: pre-wrap;
+            border-radius: 8px;
+        }
+
+        /* Guide Toggle (Screen 1) */
+        #guideContent {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s ease-in-out;
+            text-align: left;
+            padding: 10px;
+            background: rgba(45, 27, 15, 0.5);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        #guideContent h4 {
+            color: var(--color-accent-fire);
+            font-family: var(--font-header);
+            margin-top: 0;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+
+        /* Language Dropdown Styles (Screen 3) */
+        #languageSelector {
+            margin: 10px auto;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background-color: var(--color-vessel-dark);
+            color: var(--color-text-light);
+            border: 1px solid var(--color-accent-gold);
+            font-size: 1em;
+            display: block;
+            max-width: 250px;
+        }
+
+        /* ------------------- STEP 1: BREATHING VISUAL ------------------- */
+        #breathingVisual {
+            width: 150px;
+            height: 150px;
+            background-color: var(--color-accent-fire);
+            border-radius: 50%;
+            margin: 40px auto;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+            transition: transform 4s linear;
+        }
+        #breathingVisual.breathing-in {
+            transform: scale(1.5);
+        }
+        #breathingVisual.breathing-out {
+            transform: scale(0.8);
+        }
+
+        /* ------------------- STEP 4: FIRE VESSEL (ENHANCED) ------------------- */
+        #fireAnimation {
+            width: 180px;
+            height: 250px;
+            background: var(--color-vessel-dark);
+            border: 3px solid var(--color-accent-gold);
+            border-radius: 15px;
+            margin: 20px auto;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.5s, transform 0.1s;
+            /* Enhanced Shadow */
+            box-shadow: 0 0 60px 10px rgba(255, 215, 0, 0.6), 0 0 20px rgba(255, 165, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            color: var(--color-accent-fire);
+        }
+        #fireAnimation.burning {
+            transform: scale(1.05);
+            box-shadow: 0 0 80px 15px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 165, 0, 1);
+        }
+
+        /* SoundCloud Player Styles */
+        .soundcloud-player {
+            margin: 20px auto;
+            max-width: 100%;
+        }
+
+        /* Monogram Logo – Top-Left Fixed */
+        #monogram-logo {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            width: 60px;
+            height: auto;
+            z-index: 20;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 10px rgba(212, 165, 116, 0.5)); /* Gold glow */
+            transition: opacity 0.3s ease;
+        }
+        #monogram-logo:hover { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <!-- Monogram Logo – Top-Left -->
+    <img src="assets/images/monogram.png" alt="Monogram" id="monogram-logo">
+
+<main id="ritual-app">
+    <!-- RITUAL STEP 0: START SCREEN -->
+    <section id="step-0" class="ritual-step">
+        <h1>The Ember of Release</h1>
+        <h2>A Fire Ritual for Unburdening the Soul</h2>
+        <p style="text-align: center;">Approach with reverence—it's not just burning paper; it's alchemizing your spirit.</p>
+        <div style="margin: 30px 0;">
+            <img src="assets/images/embers.jpg" onerror="this.src='https://placehold.co/400x300/2d1b0f/d4a574?text=Ritual+Image';" alt="A figure performing the fire ritual" style="max-width: 90%; height: auto; border-radius: 10px; box-shadow: 0 0 25px rgba(255, 215, 0, 0.1);">
+        </div>
+
+        <!-- Guide Toggle Button -->
+        <button class="nav-button" id="guideToggleButton" style="background: var(--color-vessel-dark); color: var(--color-accent-gold);" onclick="toggleGuide()">Ancient Read Guide 🔽</button>
+
+        <!-- Hidden Guide Content (Roll-Down Scroll) -->
+        <div id="guideContent">
+            <h4>How to Navigate the App</h4>
+            <p>The Ember of Release guides you through a powerful five-stage process. Use the **Proceed** button to advance seamlessly. Your most sensitive thoughts are held secure: journal entries are encrypted and stored **only on your device**, and are then permanently deleted upon the physical release of the fire sequence.</p>
+
+            <!-- ENHANCED Ancient Rites Text -->
+            <h4>The Ancient Rites of Transformation</h4>
+            <p>This rite is rooted in global traditions of purification, from the Han Dynasty's use of written talismans to modern burning ceremonies. We digitize this powerful alchemy: **Inscription** (Step 3) is the act of naming your burden, and **Release** (Step 4) is the final act of surrender. The Invocation (Step 2) is the heart of the ceremony, offered in the mystical tone of Latin with premium translations available for purchase.</p>
+        </div>
+
+        <button class="nav-button" onclick="startRitual()">Begin the Alchemical Journey</button>
+    </section>
+
+    <!-- RITUAL STEP 1: CENTER WITH BREATH (The Anchor) -->
+    <section id="step-1" class="ritual-step hidden-step">
+        <h3>Step 1: Center with Breath (The Anchor)</h3>
+        <p>Close your eyes. Synchronize your breath with the glowing Ember. **INHALE** as it expands, **EXHALE** as it shrinks.</p>
+        <div id="breathingVisual"></div>
+        <p id="breathingInstruction" style="font-size: 1.4em; color: var(--color-accent-fire); font-weight: bold;">PREPARING...</p>
+        <button class="nav-button" onclick="nextStep(2)">Proceed to Invocation</button>
+    </section>
+
+    <!-- RITUAL STEP 2: INVOKE THE DIVINE (The Prayer) -->
+    <section id="step-2" class="ritual-step hidden-step">
+        <h3>Step 2: Invoke the Divine (The Prayer)</h3>
+        <p>Select your language. Latin is included. All other languages are premium Language Packs (IAP required).</p>
+
+        <select id="languageSelector" onchange="checkLanguageIAP()">
+            <!-- Latin is the enforced default -->
+            <option value="Latin">Latin (Default)</option>
+            <option value="English">English</option>
+            <option value="Mandarin Chinese">Mandarin Chinese</option>
+            <option value="Hindi">Hindi</option>
+            <option value="Spanish">Spanish</option>
+            <option value="French">French</option>
+            <option value="Afrikaans">Afrikaans</option>
+        </select>
+
+        <div class="latin" id="prayerTextDisplay">
+            <!-- Content will be set by JavaScript to ensure Latin is the default -->
+        </div>
+
+        <!-- Local MP3 Player for Latin (no embeds, no jumps, no brown box) -->
+        <div id="soundcloudPlayer" class="soundcloud-player hidden-step">
+            <audio id="latinPrayer" src="assets/music/Latin (prayer).mp3" preload="auto" controls style="width:100%; height:166px; border-radius:8px; box-shadow: 0 2px 8px rgba(212, 165, 116, 0.1);">
+                Your browser does not support the audio element.
+            </audio>
+            <div style="font-size: 10px; color: #cccccc; text-align:center; margin-top:5px;">
+                Neil Oliver · Latin (Prayer)
+            </div>
+        </div>
+
+        <button class="nav-button hidden-step" id="step2NextButton" onclick="nextStep(3)">Proceed to Naming</button>
+    </section>
+
+    <!-- RITUAL STEP 3: WRITE YOUR BURDENS (The Naming) -->
+    <section id="step-3" class="ritual-step hidden-step">
+        <h3>Step 3: Write Your Burdens (The Naming)</h3>
+        <p>Pour out your secrets, problems, or pains. Be raw—tears are welcome allies.</p>
+        <textarea id="journalArea" placeholder="Type your burdens here... (Your words are stored locally and will be securely destroyed by the fire)" style="min-height: 250px; width: 90%; padding: 20px; border: 2px solid var(--color-accent-gold); background-color: var(--color-vessel-dark); color: var(--color-text-light); font-family: var(--font-body); font-size: 1em; margin: 20px auto; display: block; resize: none; border-radius: 10px; box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);"></textarea>
+        <button class="nav-button" onclick="nextStep(4)">Seal & Prepare for Release</button>
+    </section>
+
+    <!-- RITUAL STEP 4: RELEASE TO THE FLAMES (The Transformation) -->
+    <section id="step-4" class="ritual-step hidden-step">
+        <h3>Step 4: Release to the Flames (The Transformation)</h3>
+        <div id="fireVessel">
+            <p id="releaseInstruction">Your burden is folded and ready. **Hold Down** the Ember to surrender.</p>
+            <!-- Enhanced Fire Animation Container -->
+            <div id="fireAnimation"
+                 ontouchstart="beginAlchemicalRelease()"
+                 ontouchend="endAlchemicalRelease(false)"
+                 onmousedown="beginAlchemicalRelease()"
+                 onmouseup="endAlchemicalRelease(false)">
+                🔥
+            </div>
+        </div>
+    </section>
+
+    <!-- RITUAL STEP 5: SEAL WITH GRATITUDE (The Integration) -->
+    <section id="step-5" class="ritual-step hidden-step">
+        <h3>Step 5: Seal with Gratitude (The Integration)</h3>
+        <p>You are unburdened. Return to breath. Recite the Invocation once more with joy. Journal any visions.</p>
+        <button class="nav-button" onclick="finishRitual()">Ritual Complete & Return</button>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Your Ritual Empire. Ignite your soul—burn the old, rise renewed.</p>
+    </footer>
+</main>
+
+<script>
+    // --- API Keys and Constants ---
+    const apiKey = "";
+    const TTS_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+    const CORE_VOICE = "Kore";
+
+    // --- TONE.JS SETUP ---
+    let ambientDrone;
+    let contextInitialized = false;
+
+    // --- APP STATE MANAGEMENT ---
+    let currentStep = 0;
+    const ritualSteps = document.querySelectorAll('.ritual-step');
+    let breathingInterval;
+    let invocationTimeout;
+
+    // --- PRAYER TEXTS & LANGUAGE MAPPING ---
+    const languageMap = {
+        'Latin': { text: `Pater noster, qui es in caelis,
+sanctificetur nomen tuum.
+Adveniat regnum tuum.
+Fiat voluntas tua, sicut in caelo et in terra.
+Panem nostrum quotidianum da nobis hodie,
+et dimitte nobis debita nostra,
+sicut et nos dimittimus debitoribus nostris.
+Et ne nos inducas in tentationem,
+sed libera nos a malo. Amen.`, lang: 'la' },
+        'English': { text: 'Our Father who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done, on earth as it is in heaven. Give us this day our daily bread, and forgive us our trespasses, as we forgive those who trespass against us. And lead us not into temptation, but deliver us from evil. Amen.', lang: 'en-US' },
+        'Mandarin Chinese': { text: '我們在天上的父，願人都尊祢的名為聖。願祢的國降臨。願祢的旨意行在地上，如同行在天上。我們日用的飲食，今日賜給我們。免我們的債，如同我們免了人的債。不叫我們遇見試探，救我們脫離兇惡。因為國度、權柄、榮耀，全是祢的，直到永遠。阿們。', lang: 'zh-CN' },
+        'Hindi': { text: 'हे हमारे पिता, तू जो स्वर्ग में है, तेरा नाम पवित्र माना जाए। तेरा राज्य आए। तेरी इच्छा जैसी स्वर्ग में पूरी होती है, वैसे पृथ्वी पर भी हो। हमारी दिन भर की रोटी आज हमें दे। और जिस प्रकार हम ने अपने अपराधियों को क्षमा किया है, वैसे तू भी हमारे अपराधों को क्षमा कर। और हमें परीक्षा में न ला, परन्तु बुराई से बचा। क्योंकि राज्य और सामर्थ्य और महिमा, सदा तेरे ही हैं। आमीन।', lang: 'hi-IN' },
+        'Spanish': { text: 'Padre nuestro, que estás en el cielo, santificado sea tu nombre. Venga a nosotros tu reino. Hágase tu voluntad, en la tierra como en el cielo. Danos hoy nuestro pan de cada día. Perdona nuestras ofensas, como también nosotros perdonamos a los que nos ofenden. No nos dejes caer en la tentación, y líbranos del mal. Amén.', lang: 'es-ES' },
+        'French': { text: 'Notre Père, qui es aux cieux, que ton nom soit sanctifié. Que ton règne vienne. Que ta volonté soit faite sur la terre comme au ciel. Donne-nous aujourd’hui notre pain de ce jour. Pardonne-nous nos offenses, comme nous pardonnons aussi à ceux qui nous ont offensés. Et ne nous laisse pas entrer en tentation. Mais délivre-nous du Mal. Amen.', lang: 'fr-FR' },
+        'Afrikaans': { text: 'Onse Vader wat in die hemel is, laat U Naam geheilig word. Laat U koninkryk kom. Laat U wil geskied, soos in die hemel net so ook op die aarde. Gee ons vandag ons daaglikse brood. En vergeef ons ons skulde, soos ons ook ons skuldenaars vergewe. En lei ons nie in versoeking nie, maar verlos ons van die Bose. Want aan U behoort die koninkryk en die krag en die heerlikheid tot in ewigheid. Amen.', lang: 'af-ZA' }
+    };
+    // Simulated sound objects, to be replaced by native audio in the final app
+    const fireSound = { play: () => { console.log('Playing Fire Sound (Simulated)'); }, pause: () => { console.log('Pausing Fire Sound'); }, currentTime: 0, loop: true };
+    const chimeSound = { play: () => { console.log('Playing Chime Sound (Simulated)'); } };
+
+    // --- TONE.JS AMBIENT AUDIO FUNCTIONS ---
+    function initAudioContext() {
+        if (!contextInitialized) {
+            Tone.start();
+            // Create a basic ambient synth pad that loops C3 and G3
+            ambientDrone = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: "sawtooth" },
+                envelope: {
+                    attack: 4,
+                    decay: 2,
+                    sustain: 0.5,
+                    release: 10
+                },
+                volume: -18 // Keep it very soft
+            }).toDestination();
+            contextInitialized = true;
+        }
+    }
+
+    function startDrone() {
+        if (ambientDrone) {
+            // Use a slight detune for a richer, more mystical sound
+            ambientDrone.triggerAttackRelease(["C3", "G3", "C4"], "40s");
+        }
+    }
+
+    function stopDrone() {
+        if (ambientDrone) {
+            ambientDrone.releaseAll();
+        }
+    }
+
+    // --- WAV Utility Functions (Required for PCM TTS Output) ---
+    function base64ToArrayBuffer(base64) {
+        const binaryString = atob(base64);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+
+    function writeString(view, offset, string) {
+        for (let i = 0; i < string.length; i++) {
+            view.setUint8(offset + i, string.charCodeAt(i));
+        }
+    }
+
+    function pcmToWav(pcm16, sampleRate = 24000) {
+        const numChannels = 1;
+        const bytesPerSample = 2;
+        const dataLength = pcm16.length * bytesPerSample;
+        const buffer = new ArrayBuffer(44 + dataLength);
+        const view = new DataView(buffer);
+        let offset = 0;
+
+        // RIFF chunk
+        writeString(view, offset, 'RIFF'); offset += 4;
+        view.setUint32(offset, 36 + dataLength, true); offset += 4;
+        writeString(view, offset, 'WAVE'); offset += 4;
+
+        // FMT chunk
+        writeString(view, offset, 'fmt '); offset += 4;
+        view.setUint32(offset, 16, true); offset += 4;
+        view.setUint16(offset, 1, true); offset += 2;
+        view.setUint16(offset, numChannels, true); offset += 2;
+        view.setUint32(offset, sampleRate, true); offset += 4;
+        view.setUint32(offset, sampleRate * numChannels * bytesPerSample, true); offset += 4;
+        view.setUint16(offset, numChannels * bytesPerSample, true); offset += 2;
+        view.setUint16(offset, 16, true); offset += 2;
+
+        // DATA chunk
+        writeString(view, offset, 'data'); offset += 4;
+        view.setUint32(offset, dataLength, true); offset += 4;
+
+        // PCM data
+        pcm16.forEach(value => {
+            view.setInt16(offset, value, true);
+            offset += 2;
+        });
+
+        return new Blob([view], { type: 'audio/wav' });
+    }
+
+    // --- RITUAL FLOW FUNCTIONS ---
+
+    function showStep(stepIndex) {
+        // Stop drone if leaving step 1
+        if (currentStep === 1 && stepIndex !== 1) {
+            stopDrone();
+        }
+
+        // Clear any ongoing invocation timeout
+        if (invocationTimeout) {
+            clearTimeout(invocationTimeout);
+            invocationTimeout = null;
+        }
+
+        ritualSteps.forEach((step, index) => {
+            step.classList.toggle('hidden-step', index !== stepIndex);
+        });
+        currentStep = stepIndex;
+
+        if (currentStep === 1) {
+            startBreathingAnimation();
+            startDrone(); // Start drone when entering step 1
+        } else {
+            clearInterval(breathingInterval);
+        }
+        if (currentStep === 2) {
+            document.getElementById('step2NextButton').classList.add('hidden-step');
+            // Ensure selected language is displayed and status is checked
+            checkLanguageIAP();
+        }
+    }
+
+    function startRitual() {
+        initAudioContext(); // Initialize audio context on first user click
+        document.querySelector('footer').style.display = 'none';
+        showStep(1);
+    }
+
+    function nextStep(targetStep) {
+        showStep(targetStep);
+    }
+
+    // --- Guide Toggle (Screen 1) ---
+    let guideOpen = false;
+    function toggleGuide() {
+        const content = document.getElementById('guideContent');
+        const button = document.getElementById('guideToggleButton');
+        guideOpen = !guideOpen;
+
+        if (guideOpen) {
+            content.style.maxHeight = content.scrollHeight + 30 + "px";
+            button.textContent = "Ancient Read Guide ▴";
+        } else {
+            content.style.maxHeight = "0";
+            button.textContent = "Ancient Read Guide 🔽";
+        }
+    }
+
+    // --- Breathing Logic (Screen 2) ---
+    function startBreathingAnimation() {
+        const visual = document.getElementById('breathingVisual');
+        const instruction = document.getElementById('breathingInstruction');
+        let count = 0;
+        let phase = 0;
+
+        function cycle() {
+            if (currentStep !== 1) return;
+
+            const phases = [
+                { text: "INHALE (4)", class: 'breathing-in', duration: 4000 },
+                { text: "HOLD (4)", class: '', duration: 4000 },
+                { text: "EXHALE (4)", class: 'breathing-out', duration: 4000 },
+                { text: "HOLD EMPTY (4)", class: '', duration: 4000 }
+            ];
+
+            const currentPhase = phases[phase % 4];
+
+            instruction.textContent = currentPhase.text;
+            visual.classList.remove('breathing-in', 'breathing-out');
+            if (currentPhase.class) {
+                visual.classList.add(currentPhase.class);
+            }
+
+            if (phase % 4 === 3) {
+                count++;
+                if (count >= 5) {
+                    instruction.textContent = "ANCHOR ACHIEVED. Proceed when ready.";
+                    clearInterval(breathingInterval);
+                    return;
+                }
+            }
+            phase++;
+        }
+        cycle();
+        breathingInterval = setInterval(cycle, 4000);
+    }
+
+
+    // --- Language Check Logic (Screen 3) ---
+
+    function checkLanguageIAP() {
+        const selector = document.getElementById('languageSelector');
+        const selectedLang = selector.value;
+        const display = document.getElementById('prayerTextDisplay');
+        const soundcloudPlayer = document.getElementById('soundcloudPlayer');
+        const nextBtn = document.getElementById('step2NextButton');
+
+        // Ensure the correct text is displayed (read-only for all)
+        display.innerText = languageMap[selectedLang].text;
+        display.contentEditable = false; // Ensure read-only
+
+        // Clear any ongoing timeout
+        if (invocationTimeout) {
+            clearTimeout(invocationTimeout);
+            invocationTimeout = null;
+        }
+
+        if (selectedLang === 'Latin') {
+            // Latin: Show sound player and start timeout for next button
+            soundcloudPlayer.classList.remove('hidden-step');
+            nextBtn.classList.add('hidden-step');
+            invocationTimeout = setTimeout(() => {
+                nextBtn.classList.remove('hidden-step');
+            }, 30000); // Approximate track duration
+        } else {
+            // Other languages: Hide sound player, show next button immediately
+            soundcloudPlayer.classList.add('hidden-step');
+            nextBtn.classList.remove('hidden-step');
+        }
+    }
+
+
+    // --- Fire Release Logic (Screen 4) ---
+    let releaseTimer;
+    let burnProgress = 0;
+    const fireElement = document.getElementById('fireAnimation');
+
+    function beginAlchemicalRelease() {
+        if (currentStep !== 4 || releaseTimer) return;
+
+        fireElement.classList.add('burning');
+        fireSound.play();
+        fireElement.style.opacity = 1;
+
+        releaseTimer = setInterval(() => {
+            burnProgress += 2;
+            document.getElementById('releaseInstruction').textContent = `Releasing... ${burnProgress}% (Hold to finish)`;
+
+            if (burnProgress >= 100) {
+                endAlchemicalRelease(true);
+            }
+        }, 50);
+    }
+
+    function endAlchemicalRelease(completed) {
+        clearInterval(releaseTimer);
+        releaseTimer = null;
+        fireSound.pause();
+        fireElement.classList.remove('burning');
+        fireElement.style.opacity = 0.8;
+
+        if (completed) {
+            chimeSound.play();
+            document.getElementById('releaseInstruction').innerHTML = '🔥 **SOUL FREED.** What was heavy is now light.';
+
+            // Secure deletion of journal content happens here in the final Android/Native App
+            document.getElementById('journalArea').value = '';
+
+            setTimeout(() => {
+                nextStep(5);
+            }, 3000);
+
+        } else if (burnProgress > 0) {
+            document.getElementById('releaseInstruction').textContent = '⚠️ Release interrupted. Hold Down the Ember for full surrender.';
+        }
+        burnProgress = 0;
+    }
+
+    // --- Final Ritual Step (Replacing alert()) ---
+    function finishRitual() {
+        const step5 = document.getElementById('step-5');
+        const finishBtn = step5.querySelector('.nav-button');
+
+        // Update UI message for final integration
+        step5.querySelector('h3').textContent = "Ritual Cycle Complete.";
+        step5.querySelector('p').textContent = "The Ember is extinguished. Peace be with you. You are renewed.";
+
+        finishBtn.textContent = "Return to Start";
+        // Simple reload to restart the app
+        finishBtn.onclick = () => location.reload();
+    }
+
+    // Initial setup
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize with default state
+        showStep(0);
+        // Force check IAP/display for Step 2 elements even if not visible yet
+        document.getElementById('prayerTextDisplay').innerText = languageMap['Latin'].text;
+        document.getElementById('prayerTextDisplay').contentEditable = false;
+        checkLanguageIAP();
+    });
+</script>
+</body>
+</html>
